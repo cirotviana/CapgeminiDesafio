@@ -1,14 +1,14 @@
-import { Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Anuncios } from "../models/Anuncios";
+import { BaseEntity, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { AnunciosModel } from "./Anuncios.model";
 
 @Entity()
-export class Cliente {
+export class ClienteModel extends BaseEntity {
 
     @PrimaryGeneratedColumn()
-    id: number | undefined;
+    id!: number ;
     
-    @OneToMany(() => Anuncios, anuncios => anuncios.cliente)
-    anuncios: Anuncios[] | undefined;
+    @OneToMany(() => AnunciosModel, anuncios => anuncios.cliente)
+    anuncios!: AnunciosModel[];
 
 
 /*     investimentoTotal: number;

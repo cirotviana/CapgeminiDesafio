@@ -7,10 +7,6 @@ import { dbConfig } from "./database/db";
 import allRoutes from "./routes";
 
 import * as core from 'express-serve-static-core';
-//require('./routes')
-
-//const helmet = require('helmet')
-//const cors = require('cors')
 
 export class App {
     express: core.Express;
@@ -21,7 +17,7 @@ export class App {
         this.database()
         this.middlewares()
         this.routes()
-        //this.errorManagement()
+        this.errorManagement()
     }
 
     database() {
@@ -35,6 +31,7 @@ export class App {
         this.express.use(cors())
         //   this.express.use(morgan('combined', { stream: core.stream }))
         this.express.use(helmet())
+        this.express.use(express.urlencoded({ extended: true}))
         this.express.use(express.json())
     }
 
@@ -42,22 +39,24 @@ export class App {
         this.express.use('/api', allRoutes)
     }
 
-    /*     errorManagement() {
-            this.express.use(core.notFoundHandler)
-            this.express.use(core.errorMiddleware)
-    
-            process.on('unhandledRejection', reason => {
-                core.logger.info('Unhandled rejection, throwing')
-                throw reason
-            })
-    
-            process.on('uncaughtException', error => {
-                core.logger.info('Unhandled exception, handling')
-    
-                core.errorHandler.handleError(error)
-                if (!core.errorHandler.isTrustedError(error)) {
-                    process.exit(1)
-                }
-            })
-        } */
+    errorManagement() {
+        /*         this.express.use(function inputErrorHandler(err, req, res, next) {
+                    if (req.xhr) {
+                        res.status(500).send({ error: 'Something failed!' });
+                    } else {
+                        next(err);
+                    }
+                })*/
+
+        this.express.use(function errorHandler(err: any, req: core.Request, res: core.Response, next: core.NextFunction) {
+            console.log(err);
+            
+            const status  = !err.status ? 500 : err.status;
+            res.status(status);
+            res.json(err?.message)
+        })
+
+
+
+    }
 }

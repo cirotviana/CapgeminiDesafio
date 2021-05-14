@@ -1,37 +1,46 @@
+import { convertDateString } from "../../utils/string";
+import { AnunciosModel } from "../models/Anuncios.model";
+import { ClienteModel } from "../models/Cliente.model";
 import { AnunciosDAO } from "../models/DAO/AnunciosDAO";
+import { ClienteDAO } from "../models/DAO/ClienteDAO";
 
 export class AnunciosService {
 
 
 
-    async store(body:any) {
-/*         const user = await this.check(body.email)
+    async store(body: any) {
+        const { nome, dataInicio, dataTermino, investimentoPorDia, idCliente } = body;
 
-        if (!user) {
-            return {
-                user: await this.user.create({ ...body }),
-                ...Response.userCreated
-            }
-        }
+        const cliente = await new ClienteDAO().getById(idCliente);
+        if (!cliente) return { status: 400, message: "Cliente Invalido!" }
+        console.log();
 
-        return Response.userFound */
+
+        const anuncioEntity = new AnunciosModel(nome, new Date(convertDateString(dataInicio)), new Date(convertDateString(dataTermino)), investimentoPorDia, cliente);
+
+        const anuncioCriado = await new AnunciosDAO().create(anuncioEntity);
+
+        if (!anuncioCriado) return { status: 500, message: "Não foi possível salvar o anúncio." }
+
+        return { status: 200, anuncioCriado }
     }
 
 
-    async get(id:any) {
+    async get(id: any) {
+        const idInt = parseInt(id);
+        if (isNaN(idInt))
+            return ({ status: 400, message: "Identificador Inválido. Forneça um identificador válido." })
 
-        const anuncio = new AnunciosDAO().get(id);
-        return anuncio;
-/*         const user = await this.user.findByPk(id)
+        const anuncio = await new AnunciosDAO().getById(idInt);
+        if (!anuncio) return { status: 404, message: "Anuncio não encontrado.", anuncio: {} }
+        return { status: 200, message: "Anuncio encontrado com sucesso.", anuncio };
+    }
 
-        if (!user) {
-            return Response.userNotFound
-        }
+    async getAll() {
+        const anuncios = await new AnunciosDAO().getAll();
+        if (!anuncios) return { status: 500, message: "Não foi possível salvar o anúncio." }
 
-        return {
-            user,
-            ...Response.userOk
-        } */
+        return { status: 200, anuncios: anuncios };
     }
 
 }
