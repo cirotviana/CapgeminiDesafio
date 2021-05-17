@@ -6,7 +6,9 @@
   "scripts": {
     "test": "npx jest --detectOpenHandles",
     "dev": "nodemon ",
-    "build": "tsc --project ./"
+    "build": "tsc --project ./",
+    "start": "node ./build/src/server.js"
+
   },
   "author": "Ciro Viana",
   "license": "GPL-3.0-or-later",
