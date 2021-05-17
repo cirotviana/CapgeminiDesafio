@@ -1,62 +1,31 @@
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
-import { Connection, createConnection } from "typeorm";
+import { createConnection } from "typeorm";
 
 import { dbConfig } from "./database/db";
-import allRoutes from "./routes";
+import allRoutes from "./app/routes";
 
 import * as core from 'express-serve-static-core';
 
-export class App {
-    express: core.Express;
+//const express: any = ;
+const app = express()
 
-    constructor() {
-        this.express = express();
+app.use(cors())
+app.use(helmet())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
-        this.database()
-        this.middlewares()
-        this.routes()
-        this.errorManagement()
-    }
+createConnection(dbConfig)
+    .catch((err: any) => { console.log('Não foi possível conectar com o BD.\n' + err) })
 
-    database() {
-        createConnection(dbConfig)
-            .then((_connection: Connection) => {
+app.use('/v1', allRoutes)
 
-            }).catch((err: any) => { console.log('Erro na conexão com o BD.\n' + err) })
-    }
-
-    middlewares() {
-        this.express.use(cors())
-        //   this.express.use(morgan('combined', { stream: core.stream }))
-        this.express.use(helmet())
-        this.express.use(express.urlencoded({ extended: true}))
-        this.express.use(express.json())
-    }
-
-    routes() {
-        this.express.use('/api', allRoutes)
-    }
-
-    errorManagement() {
-        /*         this.express.use(function inputErrorHandler(err, req, res, next) {
-                    if (req.xhr) {
-                        res.status(500).send({ error: 'Something failed!' });
-                    } else {
-                        next(err);
-                    }
-                })*/
-
-        this.express.use(function errorHandler(err: any, req: core.Request, res: core.Response, next: core.NextFunction) {
-            console.log(err);
-            
-            const status  = !err.status ? 500 : err.status;
-            res.status(status);
-            res.json(err?.message)
-        })
+app.use(function errorHandler(err: any, req: core.Request, res: core.Response, next: core.NextFunction) {
+    const status = !err.status ? 500 : err.status;
+    res.status(status);
+    res.json(err?.message)
+})
 
 
-
-    }
-}
+export default app;

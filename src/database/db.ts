@@ -1,17 +1,17 @@
 import { ConnectionOptions, createConnection } from "typeorm";
 
-import { AnunciosModel } from "../app/models/Anuncios.model";
-import { ClienteModel } from "../app/models/Cliente.model";
+import { AnunciosModel } from "../app/DAO/models/Anuncios.model";
+import { ClientesModel } from "../app/DAO/models/Clientes.model";
 
-const models = [AnunciosModel, ClienteModel]
+const models = [AnunciosModel, ClientesModel]
 
 export const dbConfig: ConnectionOptions = {
   type: "postgres",
-  host: process.env.POSTGRES_HOST || "localhost",
-  port: Number(process.env.POSTGRES_PORT) || 5432,
-  username: process.env.POSTGRES_USER || "postgres",
-  password: process.env.POSTGRES_PASSWORD || "1234",
-  database: process.env.POSTGRES_DB || "capgemini-desafio",
+  host: "localhost",
+  port: 5432,
+  username: "postgres",
+  password: "1234",
+  database: "capgemini-desafio",
   entities: models,
   synchronize: true,
 };

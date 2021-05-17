@@ -4,7 +4,7 @@ export const CLIQUES_POR_VISUALIZACAO = 12 / 100;
 export const VISUALIZACOES_POR_COMPARTILHAMENTO = 40;
 export const MAX_COMPARTILHAMENTOS = 4;
 
-export class CalculadoraDeAlcanceDeAnuncios {
+export class CalculadoraAlcanceAnuncios {
 
     static getVisualizacoesPorInvestimento(valor: number) {
         return Math.floor(VISUALIZACOES_POR_REAL * valor);
@@ -28,19 +28,27 @@ export class CalculadoraDeAlcanceDeAnuncios {
 
     static getRelatorioCompartilhamento(cliques: number) {
         let numCliques = cliques;
-        let numCompartilhamentosRealizados = 0;
-        let numTotalCliques, numTotalCompartilhamentos, numTotalVisualizacoes;
-        numTotalCliques = numTotalCompartilhamentos = numTotalVisualizacoes = 0
-        while ((numCompartilhamentosRealizados < MAX_COMPARTILHAMENTOS) && this.geraCompartilhamento(numCliques)) {
-            const numCompartilhamentos = this.getCompatilhamentos(numCliques);
-            const numVisualizacoesPorCompartilhamento = this.getVisualizacoes(numCompartilhamentos);
-            numCliques = this.getCliques(numVisualizacoesPorCompartilhamento);
-            numTotalCompartilhamentos += numCompartilhamentos;
-            numTotalCliques += numCliques;
-            numTotalVisualizacoes += numVisualizacoesPorCompartilhamento;
-            numCompartilhamentosRealizados++;
+        let totalCliques, totalCompartilhamentos, totalVisualizacoes;
+        totalCliques = totalCompartilhamentos = totalVisualizacoes = 0
+        let nCompartilhamentos = 0;
+        while ((nCompartilhamentos < MAX_COMPARTILHAMENTOS) && this.geraCompartilhamento(numCliques)) {
+            const {cliques, compartilhamentos, visualizacoes} = this.simulaCompartilhamento(numCliques);
+
+            totalCompartilhamentos += compartilhamentos;
+            numCliques = cliques;
+            totalCliques += numCliques;
+            totalVisualizacoes += visualizacoes;
+            
+            nCompartilhamentos++;
         }
-        return { numTotalCliques, numTotalCompartilhamentos, numTotalVisualizacoes };
+        return { numTotalCliques: totalCliques, numTotalCompartilhamentos: totalCompartilhamentos, numTotalVisualizacoes: totalVisualizacoes };
+    }
+
+    static simulaCompartilhamento(cliques: number){
+        const compartilhamentos = this.getCompatilhamentos(cliques);
+        const visualizacoes = this.getVisualizacoes(compartilhamentos);
+        cliques = this.getCliques(visualizacoes);
+        return {compartilhamentos, visualizacoes, cliques}        
     }
 
     static calcular(investimentoInicial: number) {
@@ -58,8 +66,4 @@ export class CalculadoraDeAlcanceDeAnuncios {
         relatorio.compartilhamentos += numTotalCompartilhamentos;
         return relatorio;
     }
-
 }
-
-console.log(CalculadoraDeAlcanceDeAnuncios.calcular(100));
-
