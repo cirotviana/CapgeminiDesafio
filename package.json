@@ -7,7 +7,7 @@
     "test": "jest --detectOpenHandles",
     "dev": "nodemon ",
     "build": "tsc --project ./",
-    "start": "./build/server"
+    "start": "node ./build/src/server.js"
 
   },
   "author": "Ciro Viana",
