@@ -21,22 +21,22 @@ Este programa será composto de duas partes:
 
 
 
-# Como Testar
-    
-    
-   Para rodar a aplicação abra a pasta no terminal e rode os seguintes comandos:
+# Como Rodar
 
-    npm install
+  1. Instale o [postgresql](https://www.postgresql.org/download/)
+  2. git clone https://github.com/cirotviana/CapgeminiDesafio.git
+  3. cd ./CapgeminiDesafio
+  4. Edite o arquivo /src/database/db.ts com as suas configurações de banco de dados.
+  5. npm install
+  6. npm run build
+  7. npm start 
     
     
-   Para rodar os testes: 
+    
+# Para rodar os testes: 
 
     npm run test
     
-    
-   Para compilar e rodar a API: 
-
-    npm start
  
 
 # API Endpoints Disponíveis:

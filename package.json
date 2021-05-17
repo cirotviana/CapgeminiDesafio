@@ -4,7 +4,7 @@
   "description": "Sistema para cadastro de anúncios.",
   "main": "./src/server.ts",
   "scripts": {
-    "test": "jest --detectOpenHandles",
+    "test": "npx jest --detectOpenHandles",
     "dev": "nodemon ",
     "build": "tsc --project ./"
   },

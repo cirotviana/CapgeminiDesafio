@@ -9,9 +9,9 @@ export const dbConfig: ConnectionOptions = {
   type: "postgres",
   host: "localhost",
   port: 5432,
-  username: "postgres",
-  password: "1234",
-  database: "capgemini-desafio",
+  username: "",
+  password: "",
+  database: "",
   entities: models,
   synchronize: true,
 };
