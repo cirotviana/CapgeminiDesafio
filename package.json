@@ -6,7 +6,9 @@
   "scripts": {
     "test": "jest --detectOpenHandles",
     "dev": "nodemon ",
-    "build": "tsc --project ./"
+    "build": "tsc --project ./",
+    "start": "./build/server"
+
   },
   "author": "Ciro Viana",
   "license": "GPL-3.0-or-later",
